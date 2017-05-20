@@ -27,6 +27,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -51,6 +52,9 @@ import javax.swing.event.ListSelectionListener;
 
 import org.rcaexplore.algo.Algorithm;
 import org.rcaexplore.algo.multicontext.ExploMultiFCA;
+import org.rcaexplore.constraint.CheckEqualityOperators;
+import org.rcaexplore.constraint.ListEqualityConstraint;
+import org.rcaexplore.constraint.ShowDialog;
 import org.rcaexplore.context.ObjectAttributeContext;
 import org.rcaexplore.context.ObjectObjectContext;
 import org.rcaexplore.event.UserAction;
@@ -279,9 +283,10 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		JPanel oaContexts=new JPanel();
 		JScrollPane jsp=new JScrollPane(oaContexts);
 		getContentPane().add(jsp, BorderLayout.CENTER);
-		oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));
+		oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));		
 		for (final ObjectObjectContext c : model.getCurrentConfig().getSelectedOOContexts())
 		{
+			
 			JPanel contextPanel=new JPanel();
 			contextPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
@@ -313,7 +318,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			list.addListSelectionListener(new ListSelectionListener() {
 				
 				@Override
-				public void valueChanged(ListSelectionEvent arg0) {
+				public void valueChanged(ListSelectionEvent arg0) {					
 					List<?> selection=((JList<?>)arg0.getSource()).getSelectedValuesList();
 					ArrayList<String> toRemove=new ArrayList<String>();
 					ArrayList<String> toAdd=new ArrayList<String>();
@@ -348,9 +353,8 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 					for (String s : toAdd){
 						notifyUserAction(UserAction.ADD_SCALING_OPERATOR, c, s, null);
 						System.out.println("add "+s);
-					}
-				
-				}
+					}				
+				}					
 			});
 			contextPanel.add(new JLabel("  "+c.getRelationName()));
 			oaContexts.add(contextPanel);
@@ -360,8 +364,22 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		b0.addActionListener(new ActionListener() {
 			 
             public void actionPerformed(ActionEvent e)
+            {	
+            /***Amirouche**/	            	
+            CheckEqualityOperators checkEqualityOperators = new CheckEqualityOperators();
+            HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  checkEqualityOperators.constructHashMap(ListEqualityConstraint.getInstance().getLstConstraint(), model.getCurrentConfig().getSelectedOOContexts());        		
+            if(!checkEqualityOperators.checkEqualityOperatorsOOContexts(constraintOOContext, model))
             {
-               config(lock2);
+            	ShowDialog showDialog = new ShowDialog(checkEqualityOperators.getMsgError(), "Error", 0);
+            	showDialog.showMessageDialog();            	
+            }
+            else
+            {
+            	System.out.println("check operators : success");
+            	config(lock2);
+            	
+            }
+            /***Amirouche***/            
             }
         });
 		getContentPane().add(b0,BorderLayout.SOUTH);

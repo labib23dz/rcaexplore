@@ -63,7 +63,7 @@ public class Main {
 		
 		//launch RCF editor
 		if (args.length==0 ||args[0].equals("editor")) {
-				
+			
 			EditorContextFamilyModel cfm=new EditorContextFamilyModel();
 			final EditorFrame ef=new EditorFrame(cfm);
 			@SuppressWarnings("unused")

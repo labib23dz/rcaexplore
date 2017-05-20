@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,6 +50,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.json.simple.parser.ParseException;
+import org.rcaexplore.constraint.ConstraintDialogView;
+import org.rcaexplore.constraint.ListEqualityConstraint;
+import org.rcaexplore.constraint.ParseJSON;
+import org.rcaexplore.constraint.ShowDialog;
 import org.rcaexplore.contexteditor.controller.ContextEvent;
 import org.rcaexplore.contexteditor.controller.ContextListener;
 import org.rcaexplore.contexteditor.model.ContextModelWithBitSet;
@@ -204,7 +210,24 @@ public class EditorFrame extends JFrame implements ContextListener, ActionListen
 		menRCF.add(itColName);
 		menRCF.addSeparator();
 		
+		
+		/*******************************************
+		 ************* Ajout Amirouche*************
+		 *****************************************/
+		final JMenu menConstraint = new JMenu("Constraint");
+		JMenuItem itLoadCnst = new JMenuItem("Load Constraint");
+		JMenuItem itViewCnst = new JMenuItem("View Constraint");
+		itLoadCnst.addActionListener(EditorFrame.this);
+		itViewCnst.addActionListener(EditorFrame.this);
+		/*******************************************
+		 ************* Fin Amirouche*************
+		 *****************************************/
+		menConstraint.add(itLoadCnst);
+		menConstraint.add(itViewCnst);
+		
 		menuBar.add(menRCF);
+		menuBar.add(menConstraint);
+		
 
 		setJMenuBar(menuBar);
 		
@@ -504,6 +527,40 @@ public class EditorFrame extends JFrame implements ContextListener, ActionListen
 				}
 			}
 		}
+		/** 
+		 * Amirouche
+		 */
+		else if (e.getActionCommand().equals("Load Constraint"))
+		{
+			ParseJSON parseJson = ParseJSON.getInstance();
+			try {
+				parseJson.parseJson();				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+		}
+		else if (e.getActionCommand().equals("View Constraint"))
+		{
+			if (ListEqualityConstraint.getInstance().getLstConstraint().isEmpty())
+			{
+				ShowDialog showDialog = new ShowDialog("no constraint loaded", "Information", 1);
+				showDialog.showMessageDialog();
+			}
+			else
+			{
+				ConstraintDialogView constraintDialog = new ConstraintDialogView(ListEqualityConstraint.getInstance().getLstConstraint());
+				constraintDialog.setVisible(true);
+			}
+			
+		}
+		
+		/**
+		 * Fin Amirouche
+		 */
 			}
 			}).start();
 	}

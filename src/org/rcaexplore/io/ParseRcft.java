@@ -132,8 +132,7 @@ public class ParseRcft {
 	private void parseOAContext(BufferedReader input,String desc) throws IOException, ParserException {
 
 		int oAContextLine=lineNumber;
-		String oacName = desc.split("\\ ")[1]; 
-		
+		String oacName = desc.split("\\ ")[1]; 		
 		ObjectAttributeContext oac = new ObjectAttributeContext(oacName);
 		
 		System.out.println("Parsing formal context " + oacName);

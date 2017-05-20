@@ -290,8 +290,7 @@ public class EditorContextFamilyModel {
 
 	public void loadRCF(File f) throws IOException {
 		setCurrentFile(f);
-		String fileExtension=(f.getName().substring(f.getName().lastIndexOf(".")+1));
-				
+		String fileExtension=(f.getName().substring(f.getName().lastIndexOf(".")+1));		
 		System.out.println("file extension : "+fileExtension);
 		if ("rcft".equals(fileExtension)||"rcfgz".equals(fileExtension))
 		{
