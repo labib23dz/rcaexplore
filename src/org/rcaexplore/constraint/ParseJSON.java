@@ -27,73 +27,85 @@ public class ParseJSON {
     }
 	
     
-	public void parseJson() throws IOException, ParseException {
+	public void parseJson(String filePath) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 		
 		ListEqualityConstraint lstEqualityConstraint = ListEqualityConstraint.getInstance();
 		lstEqualityConstraint.getLstConstraint().clear();
 		
-		JSONParser parser = new JSONParser();
+		String fileExtension=(filePath.substring(filePath.lastIndexOf(".")+1));
 		
-		try 
+		if (fileExtension.equals("json"))
 		{
-			Object obj = parser.parse(new FileReader("data.json"));						
-			JSONObject jsonObject = (JSONObject) obj;		
-			//récupérer l'object json Equality			
-			JSONObject equality = (JSONObject) jsonObject.get("Equality");						
-			if(equality != null) 			
-			{								
-				//Récupérer l'ensemble des clé de l'object json "Equality"
-				HashSet<String> keysEquality = new HashSet<String>(equality.keySet());				
-				Iterator<String> it = keysEquality.iterator();					
-					//Récupération des tableaux par clé
-					//TODO ajouter les tableau et les clé dans une arrays Liste.
-					while(it.hasNext())
-					{
-						String key = it.next();
-						if ((equality.get(key) instanceof JSONArray))  				
+			JSONParser parser = new JSONParser();		
+			try 
+			{
+				Object obj = parser.parse(new FileReader(filePath));						
+				JSONObject jsonObject = (JSONObject) obj;		
+				//récupérer l'object json Equality			
+				JSONObject equality = (JSONObject) jsonObject.get("Equality");						
+				if(equality != null) 			
+				{								
+					//Récupérer l'ensemble des clé de l'object json "Equality"
+					HashSet<String> keysEquality = new HashSet<String>(equality.keySet());				
+					Iterator<String> it = keysEquality.iterator();					
+						//Récupération des tableaux par clé
+						//TODO ajouter les tableau et les clé dans une arrays Liste.
+						while(it.hasNext())
 						{
-							JSONArray relations= (JSONArray) equality.get(key); 											
-							//*************parcourir le tableau des relation*********
-							for(int i=0;i<relations.size();i++)
+							String key = it.next();
+							if ((equality.get(key) instanceof JSONArray))  				
 							{
-								String relation = (String) relations.get(i);
-								//System.out.println(json_data);
-								lstEqualityConstraint.putOne(key, relation); 
+								JSONArray relations= (JSONArray) equality.get(key); 											
+								//*************parcourir le tableau des relation*********
+								for(int i=0;i<relations.size();i++)
+								{
+									String relation = (String) relations.get(i);
+									//System.out.println(json_data);
+									lstEqualityConstraint.putOne(key, relation); 
+								}
 							}
+							else
+							{
+								ShowDialog showDialog = new ShowDialog("the value of the key \""+key+"\" must be a table.", "Error",0);
+								showDialog.showMessageDialog();
+							}
+								//**************Fin parcours********
 						}
-						else
-						{
-							ShowDialog showDialog = new ShowDialog("the value of the key \""+key+"\" must be a table.", "Error",0);
-							showDialog.showMessageDialog();
-						}
-							//**************Fin parcours********
+									
+					if (lstEqualityConstraint.checkFrequence())
+						System.out.println("Parse Json file : succes");					
+					else
+					{
+						System.out.println("Parse Json file : failed");
+						lstEqualityConstraint.getLstConstraint().clear();
+						
 					}
-								
-				if (lstEqualityConstraint.checkFrequence())
-					System.out.println("Parse Json file : succes");
+					System.out.println(lstEqualityConstraint.getLstConstraint());
+					//ShowDialog showDialog = new ShowDialog("Loading constraints : success.", "Information",1);
+					//showDialog.showMessageDialog();
+					ConstraintView constraintView = new ConstraintView(ListEqualityConstraint.getInstance().getLstConstraint());
+					constraintView.setVisible(true);
+	   		}
 				else
 				{
-					System.out.println("Parse Json file : failed");
-					lstEqualityConstraint.getLstConstraint().clear();
-					
+					ShowDialog showDialog = new ShowDialog("there is no key \"Equality\" in your json file.", "Error",0);
+					showDialog.showMessageDialog();				
 				}
-				System.out.println(lstEqualityConstraint.getLstConstraint());
-				ShowDialog showDialog = new ShowDialog("Loading constraints : success.", "Information",1);
-				showDialog.showMessageDialog();
-   		}
-			else
+				
+			}		
+			catch(ParseException e)
 			{
-				ShowDialog showDialog = new ShowDialog("there is no key \"Equality\" in your json file.", "Error",0);
-				showDialog.showMessageDialog();				
+				ShowDialog showDialog = new ShowDialog("Your json file is not valid", "Error", 0);
+				showDialog.showMessageDialog();
 			}
-			
-		}		
-		catch(ParseException e)
+		}
+		else
 		{
-			ShowDialog showDialog = new ShowDialog("Your json file is not valid", "Error", 0);
+			ShowDialog showDialog = new ShowDialog("the constraint file must have \"json\" extention", "Error", 0);
 			showDialog.showMessageDialog();
-		}										
+		}
+												
 	}
 
 }

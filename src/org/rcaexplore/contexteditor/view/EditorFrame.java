@@ -51,7 +51,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.json.simple.parser.ParseException;
-import org.rcaexplore.constraint.ConstraintDialogView;
+import org.rcaexplore.constraint.ConstraintView;
 import org.rcaexplore.constraint.ListEqualityConstraint;
 import org.rcaexplore.constraint.ParseJSON;
 import org.rcaexplore.constraint.ShowDialog;
@@ -532,16 +532,22 @@ public class EditorFrame extends JFrame implements ContextListener, ActionListen
 		 */
 		else if (e.getActionCommand().equals("Load Constraint"))
 		{
-			ParseJSON parseJson = ParseJSON.getInstance();
-			try {
-				parseJson.parseJson();				
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}			
+			JFileChooser jfc=new JFileChooser(".");
+			jfc.setFileFilter(new FileNameExtensionFilter("Json file format (*.json)","json"));			
+			if ( JFileChooser.APPROVE_OPTION == jfc.showOpenDialog(owner) ) {
+				String filePath=jfc.getSelectedFile().getAbsolutePath();
+				ParseJSON parseJson = ParseJSON.getInstance();
+				try {				
+					parseJson.parseJson(filePath);				
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+						
 		}
 		else if (e.getActionCommand().equals("View Constraint"))
 		{
@@ -552,8 +558,8 @@ public class EditorFrame extends JFrame implements ContextListener, ActionListen
 			}
 			else
 			{
-				ConstraintDialogView constraintDialog = new ConstraintDialogView(ListEqualityConstraint.getInstance().getLstConstraint());
-				constraintDialog.setVisible(true);
+				ConstraintView constraintView = new ConstraintView(ListEqualityConstraint.getInstance().getLstConstraint());
+				constraintView.setVisible(true);
 			}
 			
 		}
