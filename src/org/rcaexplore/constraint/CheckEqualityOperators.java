@@ -2,8 +2,6 @@ package org.rcaexplore.constraint;
 
 import java.util.*;
 
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 
 import org.rcaexplore.algo.multicontext.ExploMultiFCA;
 import org.rcaexplore.context.ObjectObjectContext;
@@ -42,8 +40,9 @@ public class CheckEqualityOperators {
 	  }
 	  	  
 	
-	public  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(HashMap<String, ArrayList<String>> lstConstraint, ArrayList<ObjectObjectContext> OOContexts)
+	public  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(ArrayList<ObjectObjectContext> OOContexts)
 	{
+		HashMap<String, ArrayList<String>> lstConstraint = ListEqualityConstraint.getInstance().getLstConstraint();
 		for (ObjectObjectContext ooContext:OOContexts)
 		{
 			for(Map.Entry<String, ArrayList<String>> entry : lstConstraint.entrySet()) 
@@ -56,8 +55,71 @@ public class CheckEqualityOperators {
 		}
 		return constraintOOContext;
 	}
+			
+	public ArrayList<ObjectObjectContext>  getListObjectObjectContexts (HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext, ObjectObjectContext c){
+		
+		ArrayList<ObjectObjectContext> listObjectObjectContexts = new ArrayList<>();
+		for (ArrayList<ObjectObjectContext> listOOContext : constraintOOContext.values())
+		{
+			if (listOOContext.contains(c))
+			{
+				listObjectObjectContexts =  listOOContext;
+			}
+		}
+		return listObjectObjectContexts;
+	}
 	
+	public  boolean  changeScalingOperator(ExploMultiFCA model, ObjectObjectContext c)
+	{
+		boolean changed = false;
+        HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  constructHashMap(model.getCurrentConfig().getSelectedOOContexts());
+        ArrayList<ObjectObjectContext> listObjectObjectContexts = getListObjectObjectContexts(constraintOOContext, c) ;
+        for (ObjectObjectContext ooContext : listObjectObjectContexts)
+        {		            	
+        	ArrayList<String> scalingToRemove = new ArrayList<String>();
+        	changed = true;
+        	if (!ooContext.equals(c))
+        	{
+        		for (ScalingOperator scaling : model.getCurrentConfig().getScalingOperators(ooContext))
+        		{		            			
+        			scalingToRemove.add(scaling.getName());
+        			
+        		}
+        		for (String s : scalingToRemove)
+        		{
+        			model.getCurrentConfig().removeScalingOperator(ooContext, s);
+        			System.out.println(s + " removed from " + ooContext.getRelationName());
+        		}
+        		for (ScalingOperator scaling : model.getCurrentConfig().getScalingOperators(c))
+        		{
+        			model.getCurrentConfig().addScalingOperator(ooContext, scaling);
+        			System.out.println(scaling.getName() + " add to " + ooContext.getRelationName());
+        		}
+        	}
+        }		            		           
+		return changed ; 
+	}
 	
+	public boolean checkEqualityOperatorsOOContexts (HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext, ExploMultiFCA model )
+	{
+		boolean equal= true;
+
+		for (ArrayList<ObjectObjectContext> listOOContext : constraintOOContext.values()) 
+        {	
+			ListeDistinctScalingOperators listeDistinctScalingOperators = new ListeDistinctScalingOperators();
+			ArrayList<ArrayList<ScalingOperator>> lstDistinctScalinOp;
+			lstDistinctScalinOp = listeDistinctScalingOperators.listDistinctScalingOperator(listOOContext, model);
+			if (lstDistinctScalinOp.size()>1)
+			{
+				equal = false;
+				setMsgError(listeDistinctScalingOperators.getRelationNames()+ "must have same operators \n");
+			}			
+		}
+		return equal;
+	}
+
+	
+	/*
 	public void checkChangeScalingOperator(HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext, ObjectObjectContext c, ExploMultiFCA model){
 		
 		String msg = "Operators : \n";
@@ -91,24 +153,7 @@ public class CheckEqualityOperators {
 											JOptionPane.YES_NO_OPTION, 
 											JOptionPane.QUESTION_MESSAGE);
 		
-	}
+	}*/
 	
-	public boolean checkEqualityOperatorsOOContexts (HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext, ExploMultiFCA model )
-	{
-		boolean equal= true;
-
-		for (ArrayList<ObjectObjectContext> listOOContext : constraintOOContext.values()) 
-        {	
-			ListeDistinctScalingOperators listeDistinctScalingOperators = new ListeDistinctScalingOperators();
-			ArrayList<ArrayList<ScalingOperator>> lstDistinctScalinOp;
-			lstDistinctScalinOp = listeDistinctScalingOperators.listDistinctScalingOperator(listOOContext, model);
-			if (lstDistinctScalinOp.size()>1)
-			{
-				equal = false;
-				setMsgError(listeDistinctScalingOperators.getRelationNames()+ "must have same operators \n");
-			}			
-		}
-		return equal;
-	}
-
+	
 }

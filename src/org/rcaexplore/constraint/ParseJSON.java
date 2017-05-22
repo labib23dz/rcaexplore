@@ -2,7 +2,6 @@ package org.rcaexplore.constraint;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -10,8 +9,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.rcaexplore.algo.multicontext.ExploMultiFCA;
-import org.rcaexplore.context.ObjectObjectContext;
 
 /**Class to parse the constraint JSON file
  * */
@@ -27,6 +24,7 @@ public class ParseJSON {
     }
 	
     
+	@SuppressWarnings("unchecked")
 	public void parseJson(String filePath) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 		

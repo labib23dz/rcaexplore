@@ -53,7 +53,6 @@ import javax.swing.event.ListSelectionListener;
 import org.rcaexplore.algo.Algorithm;
 import org.rcaexplore.algo.multicontext.ExploMultiFCA;
 import org.rcaexplore.constraint.CheckEqualityOperators;
-import org.rcaexplore.constraint.ListEqualityConstraint;
 import org.rcaexplore.constraint.ShowDialog;
 import org.rcaexplore.context.ObjectAttributeContext;
 import org.rcaexplore.context.ObjectObjectContext;
@@ -71,8 +70,8 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	ExploMultiFCA model;
+	
 	
 	ArrayList<UserListener> listeners;
 	
@@ -278,15 +277,14 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		pack();
 	}
 	
-	private void chooseScalingOperator(final Object lock2){
+	private void chooseScalingOperator(final Object lock2){			
 		getContentPane().removeAll();
 		JPanel oaContexts=new JPanel();
 		JScrollPane jsp=new JScrollPane(oaContexts);
 		getContentPane().add(jsp, BorderLayout.CENTER);
 		oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));		
 		for (final ObjectObjectContext c : model.getCurrentConfig().getSelectedOOContexts())
-		{
-			
+		{			
 			JPanel contextPanel=new JPanel();
 			contextPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
@@ -318,7 +316,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			list.addListSelectionListener(new ListSelectionListener() {
 				
 				@Override
-				public void valueChanged(ListSelectionEvent arg0) {					
+				public void valueChanged(ListSelectionEvent arg0) {										
 					List<?> selection=((JList<?>)arg0.getSource()).getSelectedValuesList();
 					ArrayList<String> toRemove=new ArrayList<String>();
 					ArrayList<String> toAdd=new ArrayList<String>();
@@ -352,12 +350,21 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 					}
 					for (String s : toAdd){
 						notifyUserAction(UserAction.ADD_SCALING_OPERATOR, c, s, null);
-						System.out.println("add "+s);
-					}				
-				}					
+						System.out.println("add "+s);											
+					}
+					/**Debut Amirouche**/					
+					CheckEqualityOperators checkEqualityOperators = new CheckEqualityOperators();		            		            		           
+					if (checkEqualityOperators.changeScalingOperator(model, c)) 
+						{								
+							chooseScalingOperator(lock2);													
+							return;
+						}						
+					/**Fin Amirouche**/
+				}				
 			});
+
 			contextPanel.add(new JLabel("  "+c.getRelationName()));
-			oaContexts.add(contextPanel);
+			oaContexts.add(contextPanel);			
 			
 		}
 		JButton b0=new JButton("back");
@@ -365,9 +372,10 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			 
             public void actionPerformed(ActionEvent e)
             {	
-            /***Amirouche**/	            	
+            /***Debut Amirouche**/	                       		                        	
             CheckEqualityOperators checkEqualityOperators = new CheckEqualityOperators();
-            HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  checkEqualityOperators.constructHashMap(ListEqualityConstraint.getInstance().getLstConstraint(), model.getCurrentConfig().getSelectedOOContexts());        		
+            HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  checkEqualityOperators.constructHashMap(model.getCurrentConfig().getSelectedOOContexts());
+            	
             if(!checkEqualityOperators.checkEqualityOperatorsOOContexts(constraintOOContext, model))
             {
             	ShowDialog showDialog = new ShowDialog(checkEqualityOperators.getMsgError(), "Error", 0);
@@ -379,7 +387,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
             	config(lock2);
             	
             }
-            /***Amirouche***/            
+            /***Fin Amirouche***/            
             }
         });
 		getContentPane().add(b0,BorderLayout.SOUTH);
