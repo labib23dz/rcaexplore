@@ -60,5 +60,6 @@ public class ContainsExistNScaling extends ScalingOperator {
 	@Override
 	public void setParameter(int param) {
 		x=param;
-	}
+	}	
+	
 }

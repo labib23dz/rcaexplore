@@ -21,6 +21,7 @@
 package org.rcaexplore.explo.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -42,9 +44,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -53,6 +57,7 @@ import javax.swing.event.ListSelectionListener;
 import org.rcaexplore.algo.Algorithm;
 import org.rcaexplore.algo.multicontext.ExploMultiFCA;
 import org.rcaexplore.constraint.CheckEqualityOperators;
+import org.rcaexplore.constraint.InterpretationLanguage;
 import org.rcaexplore.constraint.ShowDialog;
 import org.rcaexplore.context.ObjectAttributeContext;
 import org.rcaexplore.context.ObjectObjectContext;
@@ -278,10 +283,33 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 	}
 	
 	private void chooseScalingOperator(final Object lock2){			
-		getContentPane().removeAll();
-		JPanel oaContexts=new JPanel();
-		JScrollPane jsp=new JScrollPane(oaContexts);
-		getContentPane().add(jsp, BorderLayout.CENTER);
+		getContentPane().removeAll();		
+		JPanel oaContexts=new JPanel();	
+		/**Debut Amirouche**/
+		 
+		JPanel panLblToolBuildsGroups = new JPanel(new FlowLayout(FlowLayout.LEFT));		
+		JLabel lblToolBuildsGroups = new JLabel("the tool builds groups such that:");
+		panLblToolBuildsGroups.add(lblToolBuildsGroups);
+		
+		JPanel panTxtInterpretationLanguage = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		InterpretationLanguage interpretationLanguage = new InterpretationLanguage(model.getCurrentConfig());
+		JTextArea txtInterpretationLanguage = new JTextArea(interpretationLanguage.getInterpretation(),10,70);
+		txtInterpretationLanguage.setBorder(new LineBorder(Color.BLACK));
+		JScrollPane jspTxtInterpretationLanguage=new JScrollPane(txtInterpretationLanguage);		
+		panTxtInterpretationLanguage.add(jspTxtInterpretationLanguage);
+		
+		Box bVert = Box.createVerticalBox();		
+		bVert.add(panLblToolBuildsGroups);		
+		bVert.add(panTxtInterpretationLanguage);
+		bVert.add(Box.createGlue());
+		
+		JPanel panInterpretationLanguage = new JPanel();				
+		panInterpretationLanguage.add(bVert);
+		
+		getContentPane().add(panInterpretationLanguage, BorderLayout.NORTH);
+		/**Fin Amirouche**/
+		JScrollPane jsp=new JScrollPane(oaContexts);		
+		getContentPane().add(jsp, BorderLayout.CENTER);		
 		oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));		
 		for (final ObjectObjectContext c : model.getCurrentConfig().getSelectedOOContexts())
 		{			
@@ -311,7 +339,6 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			
 						
 			contextPanel.add(list);
-			
 			
 			list.addListSelectionListener(new ListSelectionListener() {
 				
@@ -354,11 +381,12 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 					}
 					/**Debut Amirouche**/					
 					CheckEqualityOperators checkEqualityOperators = new CheckEqualityOperators();		            		            		           
-					if (checkEqualityOperators.changeScalingOperator(model, c)) 
-						{								
+					//if (checkEqualityOperators.changeScalingOperator(model, c)) 
+						checkEqualityOperators.changeScalingOperator(model, c);
+						//{								
 							chooseScalingOperator(lock2);													
 							return;
-						}						
+						//}						
 					/**Fin Amirouche**/
 				}				
 			});
