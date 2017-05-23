@@ -23,7 +23,10 @@ package org.rcaexplore.explo.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -282,11 +285,15 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		pack();
 	}
 	
-	private void chooseScalingOperator(final Object lock2){			
+	private void chooseScalingOperator(final Object lock2){							
 		getContentPane().removeAll();		
 		JPanel oaContexts=new JPanel();	
+		oaContexts.setLayout(new GridBagLayout());
 		/**Debut Amirouche**/
 		 
+		int i = 0; // les position du JPanel contextPanel dans le JPanel oaContexts 
+		int j = 0;				
+		
 		JPanel panLblToolBuildsGroups = new JPanel(new FlowLayout(FlowLayout.LEFT));		
 		JLabel lblToolBuildsGroups = new JLabel("the tool builds groups such that:");
 		panLblToolBuildsGroups.add(lblToolBuildsGroups);
@@ -307,10 +314,14 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		panInterpretationLanguage.add(bVert);
 		
 		getContentPane().add(panInterpretationLanguage, BorderLayout.NORTH);
+		JPanel panOaContexts = new JPanel();
+		panOaContexts.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panOaContexts.add(oaContexts);
 		/**Fin Amirouche**/
-		JScrollPane jsp=new JScrollPane(oaContexts);		
+		JScrollPane jsp=new JScrollPane(panOaContexts);		
 		getContentPane().add(jsp, BorderLayout.CENTER);		
-		oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));		
+		//oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));
+		//oaContexts.setLayout(new GridLayout(3,model.getCurrentConfig().getSelectedOOContexts().size()));
 		for (final ObjectObjectContext c : model.getCurrentConfig().getSelectedOOContexts())
 		{			
 			JPanel contextPanel=new JPanel();
@@ -326,7 +337,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			JList<String> list = new JList<>(listModel); //data has type Object[]
 			list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-			
+			list.setBorder(new LineBorder(Color.BLACK));
 			int[] selectedIndices=new int[model.getCurrentConfig().getScalingOperators(c).size()];
 			int k=0;
 			for (ScalingOperator s : model.getCurrentConfig().getScalingOperators(c)){
@@ -337,8 +348,39 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 			
 			list.setSelectedIndices(selectedIndices);
 			
-						
-			contextPanel.add(list);
+			
+			/*Debut Amirouche*/
+			JPanel panList = new JPanel(new FlowLayout(FlowLayout.LEFT));					
+			panList.add(list);
+			JLabel lblRelationName = new JLabel(c.getRelationName());
+			JPanel panLblRelationName = new JPanel(new FlowLayout(FlowLayout.LEFT));					
+			panLblRelationName.add(lblRelationName);
+			
+			Box bVerticale = Box.createVerticalBox();		
+			bVerticale.add(panLblRelationName);		
+			bVerticale.add(panList);
+			bVerticale.add(Box.createGlue());
+			
+			contextPanel.add(bVerticale);
+			/*Fin Amirouche*/
+			
+			//contextPanel.add(list);
+			//contextPanel.add(new JLabel("  "+c.getRelationName()));
+			
+			
+			if (i==5) 
+				{j++; i=0;}
+
+			oaContexts.add(contextPanel,new GridBagConstraints( i,j,1,1,0.0,0.0,
+					GridBagConstraints.FIRST_LINE_START,
+					GridBagConstraints.NONE,
+					new Insets(5,5,5,5), 0,0));
+			i++;
+			
+
+			
+			
+			//oaContexts.add(contextPanel);
 			
 			list.addListSelectionListener(new ListSelectionListener() {
 				
@@ -391,8 +433,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 				}				
 			});
 
-			contextPanel.add(new JLabel("  "+c.getRelationName()));
-			oaContexts.add(contextPanel);			
+						
 			
 		}
 		JButton b0=new JButton("back");

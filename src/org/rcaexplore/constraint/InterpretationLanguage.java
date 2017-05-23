@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.rcaexplore.StepConfiguration;
-import org.rcaexplore.algo.multicontext.ExploMultiFCA;
 import org.rcaexplore.context.ObjectObjectContext;
 import org.rcaexplore.scaling.ScalingOperator;
 
@@ -42,8 +41,9 @@ public class InterpretationLanguage {
 	
 	private void buildMapSourceRelations(ArrayList<ObjectObjectContext> objectObjectContexts)
 	{
+
 		for (ObjectObjectContext objectObjectContext : objectObjectContexts )
-		{
+		{				
 			String source = objectObjectContext.getSourceContext().getName();
 			putOne(source, objectObjectContext);
 		}
@@ -66,7 +66,7 @@ public class InterpretationLanguage {
 	{		
 		for(Map.Entry<String, ArrayList<ObjectObjectContext>> entry : mapSourceRelations.entrySet()) 
 		{	
-			String source = entry.getKey(); 
+			String source = entry.getKey(); 			
 			this.interpretation += "Group of " + source + " that\n ";    					
 			for (ObjectObjectContext ooContext : entry.getValue())
 			{
