@@ -10,11 +10,13 @@ import org.rcaexplore.scaling.ScalingOperator;
 
 public class CheckEqualityOperators {
 
-	private HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext;
+	//private HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext;
 	private String msgError = "";
 	
+	
 	public CheckEqualityOperators(){
-		constraintOOContext = new HashMap<String, ArrayList<ObjectObjectContext>>();
+		//mapKeyListOOContext = new HashMap<String, ArrayList<ObjectObjectContext>>();
+		//constructHashMap(OOContexts);
 	};
 		
 	
@@ -25,22 +27,28 @@ public class CheckEqualityOperators {
 	public void setMsgError(String msgError) {
 		this.msgError += msgError;
 	}
+	
+
+	/*public HashMap<String, ArrayList<ObjectObjectContext>> getMapKeyListOOContext() {
+		return mapKeyListOOContext;
+	}*/
+	
 
 
-	private boolean putOne(String key, ObjectObjectContext value) {    
-	    if (constraintOOContext.containsKey(key)) {    
-	    	constraintOOContext.get(key).add(value);    
+	/*private boolean putOne(String key, ObjectObjectContext value) {    
+	    if (mapKeyListOOContext.containsKey(key)) {    
+	    	mapKeyListOOContext.get(key).add(value);    
 	      return true;    
 	    } else {    
 	      ArrayList<ObjectObjectContext> values = new ArrayList<>();    
 	      values.add(value);    
-	      constraintOOContext.put(key, values);    
+	      mapKeyListOOContext.put(key, values);    
 	      return false;    
 	    }    
-	  }
+	  }*/
 	  	  
 	
-	public  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(ArrayList<ObjectObjectContext> OOContexts)
+	/*private  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(ArrayList<ObjectObjectContext> OOContexts)
 	{
 		HashMap<String, ArrayList<String>> lstConstraint = ListEqualityConstraint.getInstance().getLstConstraint();
 		for (ObjectObjectContext ooContext:OOContexts)
@@ -53,8 +61,8 @@ public class CheckEqualityOperators {
 				}
 			}
 		}
-		return constraintOOContext;
-	}
+		return mapKeyListOOContext;
+	}*/
 			
 	public ArrayList<ObjectObjectContext>  getListObjectObjectContexts (HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext, ObjectObjectContext c){
 		
@@ -72,8 +80,8 @@ public class CheckEqualityOperators {
 	public  boolean  changeScalingOperator(ExploMultiFCA model, ObjectObjectContext c)
 	{
 		boolean changed = false;
-        HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  constructHashMap(model.getCurrentConfig().getSelectedOOContexts());
-        ArrayList<ObjectObjectContext> listObjectObjectContexts = getListObjectObjectContexts(constraintOOContext, c) ;
+        //HashMap<String, ArrayList<ObjectObjectContext>> constraintOOContext  =  constructHashMap(model.getCurrentConfig().getSelectedOOContexts());
+        ArrayList<ObjectObjectContext> listObjectObjectContexts = getListObjectObjectContexts(BuildMap.getMapKeyListOOContext(), c) ;
         for (ObjectObjectContext ooContext : listObjectObjectContexts)
         {		            	
         	ArrayList<String> scalingToRemove = new ArrayList<String>();

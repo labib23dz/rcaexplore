@@ -1,9 +1,16 @@
 {
         "Equality" :
                 {    
-                        "parametresPhysicoChimiques" : ["mesuresPC-1","mesuresPC-2","mesuresPC-3", "mesuresPC-4","mesuresPC-5"],                        
-                        "affinite" : ["affinite-0","affinite-1","affinite-2", "affinite-3", "affinite-4","affinite-5"],
-                        "abondance" : ["abondance-1","abondance-2","abondance-3","abondance-4","abondance-5"]                        
+                        "PC parameter" : ["has_for_level_1_PC_measure", 
+                        "has_for_level_2_PC_measure","has_for_level_3_PC_measure", 
+                        "has_for_level_4_PC_measure","has_for_level_5_PC_measure"],                        
+                        
+                        "affinity" : ["has_for_level_0_affinity","has_for_level_1_affinity","has_for_level_2_affinity", 
+                                        "has_for_level_3_affinity", "has_for_level_4_affinity",,"has_for_level_5_affinity"],
+                        
+                        "abundance" :["has_an_abundance_of_level_1","has_an_abundance_of_level_2",                                              
+                                     "has_an_abundance_of_level_3", "has_an_abundance_of_level_4", 
+                                        "has_an_abundance_of_level_5"]                                   
                 }
 }
 

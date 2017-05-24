@@ -3,7 +3,10 @@ package org.rcaexplore.constraint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+
+import org.rcaexplore.context.ObjectObjectContext;
 
 /**Class singleton to retrieve the relationships 
  * of the "equality" constraint and save them in a HashMap */
@@ -11,6 +14,7 @@ import java.util.Map.Entry;
 public class ListEqualityConstraint{    
 		
 	private static HashMap<String, ArrayList<String>> lstConstraint = new HashMap<String, ArrayList<String>>(); ;
+	
 	
 	private ListEqualityConstraint(){};	
 	
@@ -46,6 +50,7 @@ public class ListEqualityConstraint{
 	      return false;    
 	    }    
 	  }
+	  
 	  
 	  public boolean checkFrequence()
 	  {
