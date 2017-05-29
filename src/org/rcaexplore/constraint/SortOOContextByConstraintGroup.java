@@ -11,9 +11,9 @@ public class SortOOContextByConstraintGroup {
 	private static ArrayList<ObjectObjectContext> objectObjectContextsSorted = new ArrayList<>();
 
 	
-	public SortOOContextByConstraintGroup(HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext, ArrayList<ObjectObjectContext> objectObjectContexts){
+	public SortOOContextByConstraintGroup(HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext, ArrayList<ObjectObjectContext> selectedOOContexts){
 		
-		objectObjectContextsSorted = sortObjectObjectContexts(mapKeyListOOContext, objectObjectContexts);
+		objectObjectContextsSorted = sortObjectObjectContexts(mapKeyListOOContext, selectedOOContexts);
 	}
 
 
@@ -21,13 +21,15 @@ public class SortOOContextByConstraintGroup {
 		return objectObjectContextsSorted;
 	}
 	
-	private ArrayList<ObjectObjectContext> sortObjectObjectContexts(HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext, ArrayList<ObjectObjectContext> objectObjectContexts)
+	private ArrayList<ObjectObjectContext> sortObjectObjectContexts(HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext, ArrayList<ObjectObjectContext> selectedOOContexts)
 	{
+		if (mapKeyListOOContext.isEmpty()) return selectedOOContexts;
+		
 		ArrayList<ObjectObjectContext> objectObjectContextsSorted = new ArrayList<>();
 		
 		for(Map.Entry<String, ArrayList<ObjectObjectContext>> entry : mapKeyListOOContext.entrySet()) 
 		{				
-			for(ObjectObjectContext ooContext : objectObjectContexts)
+			for(ObjectObjectContext ooContext : selectedOOContexts)
 			{
 				if (entry.getValue().contains(ooContext))
 					objectObjectContextsSorted.add(ooContext);

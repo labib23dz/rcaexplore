@@ -11,9 +11,9 @@ public class BuildMap {
 	private static HashMap<String, ArrayList<ObjectObjectContext>> mapKeyListOOContext;
 
 	
-	public BuildMap(ArrayList<ObjectObjectContext> OOContexts){
+	public BuildMap(ArrayList<ObjectObjectContext> selectedOOContexts){
 		mapKeyListOOContext = new HashMap<String, ArrayList<ObjectObjectContext>>();
-		constructHashMap(OOContexts);
+		constructHashMap(selectedOOContexts);
 	};
 	
 	public static HashMap<String, ArrayList<ObjectObjectContext>> getMapKeyListOOContext() {
@@ -34,19 +34,19 @@ public class BuildMap {
 	  }
 	
 	
-	private  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(ArrayList<ObjectObjectContext> OOContexts)
+	private  HashMap<String, ArrayList<ObjectObjectContext>> constructHashMap(ArrayList<ObjectObjectContext> selectedOOContexts)
 	{
-		HashMap<String, ArrayList<String>> lstConstraint = ListEqualityConstraint.getInstance().getLstConstraint();
-		for (ObjectObjectContext ooContext:OOContexts)
-		{
-			for(Map.Entry<String, ArrayList<String>> entry : lstConstraint.entrySet()) 
-			{				
-				if (entry.getValue().contains(ooContext.getRelationName()))
-				{					
-					putOne(entry.getKey(), ooContext);
+			HashMap<String, ArrayList<String>> lstConstraint = ListEqualityConstraint.getInstance().getLstConstraint();
+			for (ObjectObjectContext ooContext:selectedOOContexts)
+			{
+				for(Map.Entry<String, ArrayList<String>> entry : lstConstraint.entrySet()) 
+				{				
+					if (entry.getValue().contains(ooContext.getRelationName()))
+					{					
+						putOne(entry.getKey(), ooContext);
+					}
 				}
-			}
-		}
+			}						
 		return mapKeyListOOContext;
 	}	
 

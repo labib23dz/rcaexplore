@@ -290,7 +290,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		getContentPane().removeAll();		
 		JPanel oaContexts=new JPanel();	
 		oaContexts.setLayout(new GridBagLayout());
-		/**Debut Amirouche**/
+		/**Debut Amirouche**/		
 		BuildMap buidMap = new BuildMap(model.getCurrentConfig().getSelectedOOContexts());
 		SortOOContextByConstraintGroup sortOOContextByConstraintGroup = new SortOOContextByConstraintGroup(BuildMap.getMapKeyListOOContext(), model.getCurrentConfig().getSelectedOOContexts());
 		int i = 0; // les position du JPanel contextPanel dans le JPanel oaContexts 
@@ -325,6 +325,7 @@ public class GraphicalMenus extends JFrame implements RCAExploreView{
 		//oaContexts.setLayout(new BoxLayout(oaContexts, BoxLayout.PAGE_AXIS));
 		//oaContexts.setLayout(new GridLayout(3,model.getCurrentConfig().getSelectedOOContexts().size()));
 		//for (final ObjectObjectContext c : model.getCurrentConfig().getSelectedOOContexts())
+		
 		for (final ObjectObjectContext c : SortOOContextByConstraintGroup.getObjectObjectContextsSorted())
 		{			
 			JPanel contextPanel=new JPanel();
